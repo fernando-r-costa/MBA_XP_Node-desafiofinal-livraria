@@ -1,0 +1,20 @@
+{
+  "extends": "standard",
+  "plugins": [
+    "import",
+    "node",
+    "promise"
+  ],
+  "env": {
+    "browser": false,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "ignorePatterns": ["node_modules/", "dist/"],
+  "rules": {
+    "semi": "error",
+    "no-console": "off"
+  }
+}
