@@ -36,9 +36,7 @@ async function deleteCliente (id) {
 
 async function getClientes () {
   try {
-    return await Cliente.findAll({
-      attributes: { exclude: ['senha'] }
-    })
+    return await Cliente.findAll()
   } catch (err) {
     throw err
   }
@@ -46,9 +44,7 @@ async function getClientes () {
 
 async function getCliente (id) {
   try {
-    return await Cliente.findByPk(id, {
-      attributes: { exclude: ['senha'] }
-    })
+    return await Cliente.findByPk(id)
   } catch (err) {
     throw err
   }

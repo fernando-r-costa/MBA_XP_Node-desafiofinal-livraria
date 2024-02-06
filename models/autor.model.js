@@ -1,8 +1,8 @@
 import Sequelize from 'sequelize'
 import dbSql from '../repositories/dbSql.js'
 
-const Cliente = dbSql.define('Cliente', {
-  clienteId: {
+const Autor = dbSql.define('Autor', {
+  autorId: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -14,26 +14,15 @@ const Cliente = dbSql.define('Cliente', {
   },
   email: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  senha: {
-    type: Sequelize.STRING,
     allowNull: false
   },
   telefone: {
     type: Sequelize.STRING,
     allowNull: false
-  },
-  endereco: {
-    type: Sequelize.STRING,
-    allowNull: false
   }
 }, {
   underscored: true,
-  defaultScope: {
-    attributes: { exclude: ['senha'] }
-  }
+  tableName: 'autores'
 })
 
-export default Cliente
+export default Autor
