@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize'
 import dbSql from '../repositories/dbSql.js'
 
-const Cliente = dbSql.define('Cliente', {
+const Cliente = dbSql.define('clientes', {
   clienteId: {
     type: Sequelize.INTEGER,
     primaryKey: true,

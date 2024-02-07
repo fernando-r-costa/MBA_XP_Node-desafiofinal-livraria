@@ -1,8 +1,9 @@
 import Sequelize from 'sequelize'
 import dbSql from '../repositories/dbSql.js'
+import Autor from './autor.model.js'
 
-const Autor = dbSql.define('autores', {
-  autorId: {
+const Livro = dbSql.define('livros', {
+  livroId: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -12,14 +13,16 @@ const Autor = dbSql.define('autores', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  email: {
-    type: Sequelize.STRING,
+  valor: {
+    type: Sequelize.DOUBLE,
     allowNull: false
   },
-  telefone: {
-    type: Sequelize.STRING,
+  estoque: {
+    type: Sequelize.INTEGER,
     allowNull: false
   }
 }, { underscored: true })
 
-export default Autor
+Livro.belongsTo(Autor, { foreignKey: 'autorId' })
+
+export default Livro

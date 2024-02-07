@@ -5,6 +5,7 @@ import winston from 'winston'
 import 'dotenv/config'
 import clienteRouter from './routes/cliente.route.js'
 import autorRouter from './routes/autor.route.js'
+import livroRouter from './routes/livro.route.js'
 
 const { combine, timestamp, label, printf } = winston.format
 const myFormat = printf(({ level, message, label, timestamp }) => {
@@ -29,6 +30,7 @@ app.use(cors())
 
 app.use('/cliente', clienteRouter)
 app.use('/autor', autorRouter)
+app.use('/livro', livroRouter)
 
 app.use((err, req, res, next) => {
   logger.error(`${req.method} ${req.baseUrl} - ${err.message}`)
