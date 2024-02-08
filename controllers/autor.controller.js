@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import AutorService from '../services/autor.services.js'
+import AutorService from '../services/autor.service.js'
 
 async function createAutor (req, res, next) {
   try {

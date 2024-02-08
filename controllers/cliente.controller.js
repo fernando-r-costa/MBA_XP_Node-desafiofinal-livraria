@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import ClienteService from '../services/cliente.services.js'
+import ClienteService from '../services/cliente.service.js'
 
 async function createCliente (req, res, next) {
   try {
