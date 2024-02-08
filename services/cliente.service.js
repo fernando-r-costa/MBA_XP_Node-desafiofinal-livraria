@@ -1,4 +1,5 @@
 import ClienteRepository from '../repositories/cliente.repository.js'
+import VendaRepository from '../repositories/venda.repository.js'
 
 async function createCliente (cliente) {
   return await ClienteRepository.createCliente(cliente)
@@ -9,9 +10,10 @@ async function updateCliente (cliente) {
 }
 
 async function deleteCliente (id) {
-  // if () {
-  //     throw new Error()
-  // }
+  const vendas = await VendaRepository.getVendasByClienteId(id)
+  if (vendas.length > 0) {
+    throw new Error('Cliente possui vendas associadas')
+  }
   await ClienteRepository.deleteCliente(id)
 }
 

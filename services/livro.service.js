@@ -1,6 +1,7 @@
 import LivroRepository from '../repositories/livro.repository.js'
 import LivroInfoRepository from '../repositories/livroInfo.repository.js'
 import AutorRepository from '../repositories/autor.repository.js'
+import VendaRepository from '../repositories/venda.repository.js'
 
 async function createLivro (livro) {
   if (await AutorRepository.getAutor(livro.autorId)) {
@@ -14,6 +15,10 @@ async function updateLivro (livro) {
 }
 
 async function deleteLivro (id) {
+  const vendas = await VendaRepository.getVendasByLivroId(id)
+  if (vendas.length > 0) {
+    throw new Error('Livro possui vendas associadas')
+  }
   return await LivroRepository.deleteLivro(id)
 }
 

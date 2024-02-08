@@ -1,4 +1,5 @@
 import AutorRepository from '../repositories/autor.repository.js'
+import VendaRepository from '../repositories/venda.repository.js'
 
 async function createAutor (autor) {
   return await AutorRepository.createAutor(autor)
@@ -9,9 +10,10 @@ async function updateAutor (autor) {
 }
 
 async function deleteAutor (id) {
-  // if () {
-  //     throw new Error()
-  // }
+  const vendas = await VendaRepository.getVendasByAutorId(id)
+  if (vendas.length > 0) {
+    throw new Error('Autor possui vendas associadas')
+  }
   await AutorRepository.deleteAutor(id)
 }
 
