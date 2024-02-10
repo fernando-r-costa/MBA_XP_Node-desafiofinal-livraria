@@ -3,7 +3,8 @@ import Cliente from '../models/cliente.model.js'
 
 async function createCliente (cliente) {
   try {
-    return await Cliente.create(cliente)
+    const novoCliente = await Cliente.create(cliente)
+    return await getCliente(novoCliente.clienteId)
   } catch (err) {
     throw err
   }
@@ -50,10 +51,24 @@ async function getCliente (id) {
   }
 }
 
+async function getClienteByEmail (email) {
+  try {
+    return await Cliente.findOne({
+      where: {
+        email
+      },
+      attributes: ['clienteId', 'nome', 'email', 'senha']
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
 export default {
   createCliente,
   updateCliente,
   deleteCliente,
   getClientes,
-  getCliente
+  getCliente,
+  getClienteByEmail
 }

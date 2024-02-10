@@ -7,6 +7,7 @@ import clienteRouter from './routes/cliente.route.js'
 import autorRouter from './routes/autor.route.js'
 import livroRouter from './routes/livro.route.js'
 import vendaRouter from './routes/venda.route.js'
+import Auth from './routes/auth.js'
 
 const { combine, timestamp, label, printf } = winston.format
 const myFormat = printf(({ level, message, label, timestamp }) => {
@@ -28,6 +29,8 @@ global.logger = winston.createLogger({
 const app = express()
 app.use(express.json())
 app.use(cors())
+
+app.use(Auth.autorizaMiddleware)
 
 app.use('/cliente', clienteRouter)
 app.use('/autor', autorRouter)
