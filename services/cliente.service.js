@@ -2,6 +2,10 @@ import ClienteRepository from '../repositories/cliente.repository.js'
 import VendaRepository from '../repositories/venda.repository.js'
 
 async function createCliente (cliente) {
+  const existeCliente = await ClienteRepository.getClienteByEmail(cliente.email)
+  if (existeCliente) {
+    throw new Error('Cliente já cadastrado')
+  }
   return await ClienteRepository.createCliente(cliente)
 }
 

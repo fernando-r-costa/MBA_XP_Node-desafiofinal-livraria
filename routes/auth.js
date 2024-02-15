@@ -1,12 +1,15 @@
 import basicAuth from 'express-basic-auth'
 import ClienteRepository from '../repositories/cliente.repository.js'
 
-async function autenticaUsuario (usuario, senha) {
-  if (usuario === 'admin' && senha === 'desafio') {
-    return { usuarioId: 'admin' }
+const autenticaUsuario = async (usuario, senha) => {
+  if (!usuario || !senha) {
+    return { usuarioId: null }
+  }
+  if (usuario === 'admin') {
+    return senha === 'desafio' ? { usuarioId: 'admin' } : { usuarioId: null }
   }
   const cliente = await ClienteRepository.getClienteByEmail(usuario)
-  if (!cliente) {
+  if (!cliente || cliente.senha !== senha) {
     return { usuarioId: null }
   }
   if (cliente.email === usuario && cliente.senha === senha) {
@@ -19,58 +22,65 @@ const autenticaMiddleware = basicAuth({
   challenge: true,
   unauthorizedResponse: 'Acesso não autenticado!',
   authorizeAsync: true,
-  authorizer: async (usuario, senha, req) => {
+  authorizer: async (usuario, senha) => {
     const { usuarioId } = await autenticaUsuario(usuario, senha)
     if (!usuarioId) {
-      return false
+      return { autenticado: false, usuarioId: null }
     }
-    req.user = usuarioId
-    return true
+    return { autenticado: true, usuarioId }
   }
 })
 
 const autorizaMiddleware = async (req, res, next) => {
   try {
-    const autenticado = await autenticaMiddleware(req, res, next)
+    const { autenticado, usuarioId } = await autenticaMiddleware(req, res, next)
     if (!req.auth || !req.auth.user) {
       return
     }
     if (autenticado === false) {
       return res.status(401).send({ error: 'Cliente ou senha inválidos!' })
     }
-    const usuarioId = req.auth.user
     if (usuarioId === 'admin') {
       return next()
     }
     const path = req.path
     const method = req.method
     const endpointsPermitidosCliente = [
-      { path: '/cliente/:id', methods: ['PUT'] },
+      { path: '/cliente', methods: ['PUT'] },
       { path: '/livro', methods: ['GET'] },
       { path: '/livro/:id', methods: ['GET'] },
       { path: '/livro/:id/avaliacao', methods: ['POST'] },
       { path: '/venda', methods: ['POST'] },
-      { path: '/venda/:id', methods: ['GET'] }
+      { path: '/venda', methods: ['GET'] }
     ]
+    const endpointPermitido = endpointsPermitidosCliente.some(endpoint => {
+      const regex = new RegExp(`^${endpoint.path.replace(/\/:id/g, '/\\d+')}(/.*)?$`)
+      return regex.test(path) && endpoint.methods.includes(method)
+    })
+    if (!endpointPermitido || path.startsWith('/venda/')) {
+      return res.status(403).send('Falha na autorização: endpoint não permitido')
+    }
     if (path === '/cliente' && method === 'PUT') {
-      if (req.params.id === usuarioId) {
+      if (req.body.clienteId === usuarioId) {
         return next()
       } else {
         return res.status(403).send('Falha na autorização: você só pode atualizar seus próprios dados')
       }
     }
+    if (path === '/venda' && method === 'POST') {
+      if (req.body.clienteId === usuarioId) {
+        return next()
+      } else {
+        return res.status(403).send('Falha na autorização: você só pode criar vendas para suas compras')
+      }
+    }
     if (path === '/venda' && method === 'GET') {
-      const clienteId = req.query.clienteId
+      const clienteId = parseInt(req.query.clienteId)
       if (clienteId === usuarioId) {
         return next()
       } else {
-        return res.status(403).send('Falha na autorização: você só pode consultar suas próprias vendas')
+        return res.status(403).send('Falha na autorização: você só pode consultar suas próprias compras')
       }
-    }
-    const endpointPermitido = endpointsPermitidosCliente.some(endpoint => endpoint.path === path && endpoint.methods.includes(method))
-
-    if (!endpointPermitido) {
-      return res.status(403).send('Falha na autorização: endpoint não permitido')
     }
     next()
   } catch (error) {
