@@ -41,4 +41,9 @@ app.use((err, req, res, next) => {
   logger.error(`${req.method} ${req.baseUrl} - ${err.message}`)
   res.status(400).send({ error: err.message })
 })
-app.listen(3000, () => console.log('API Iniciada!'))
+
+const server = app.listen(3000, () => console.log('API Iniciada!'))
+
+export {
+  server
+}
