@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import { connect } from './dbMongo.js'
-import LivroInfoSchema from './../schemas/livroInfo.schema.js'
+import LivroInfoSchema from '../schemas/livroInfo.schema.js'
 
 async function createLivroInfo (livroInfo) {
   try {

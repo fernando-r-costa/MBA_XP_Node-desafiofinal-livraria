@@ -2,7 +2,7 @@
 import express from 'express'
 import cors from 'cors'
 import winston from 'winston'
-import 'dotenv/config'
+import 'dotenv/config.js'
 import clienteRouter from './routes/cliente.route.js'
 import autorRouter from './routes/autor.route.js'
 import livroRouter from './routes/livro.route.js'
