@@ -29,4 +29,7 @@
       - Cadastrar uma venda (como se ele estivesse efetuando uma compra).
       - Consultar as suas compras.
 
+### Foi criado um CI/CD com o GitHub Actions para criação de uma imagem Docker e feito o deploy dessa imagem no Render.
+
+
 #### Link para a documentação: https://documenter.getpostman.com/view/25627884/2sA358e68p
